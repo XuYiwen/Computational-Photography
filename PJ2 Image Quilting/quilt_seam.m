@@ -30,10 +30,9 @@ function  output = quilt_seam(sample,outsize,patchsize,overlap,tol)
             % Seam cutting the ovelapping area
             cut_up = cut(cost_pch(1:overlap,:));
             cut_left = cut(cost_pch(:,1:overlap)')';
-            cut_mask = zeros(D);
-            cut_mask(1:overlap,:) = cut_mask(1:overlap,:) + cut_up;
-            cut_mask(:,1:overlap) = cut_mask(:,1:overlap) + cut_left;
-            cut_mask = cut_mask.*ovlp_mask(:,:,1);
+            cut_mask = ones(D).*ovlp_mask(:,:,1);
+            cut_mask(1:overlap,:) = cut_mask(1:overlap,:) .* cut_up;
+            cut_mask(:,1:overlap) = cut_mask(:,1:overlap) .* cut_left;
                         
             % Combine the mixture
             mix = mix_cut(temp,addin,cut_mask);
