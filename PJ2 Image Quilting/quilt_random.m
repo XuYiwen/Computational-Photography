@@ -3,11 +3,11 @@ function  output = quilt_random(sample,outsize,patchsize)
     [imh,imw,~] = size(sample);
     r = floor (patchsize/2); 
     D = (2*r +1);
-    N = floor (outsize / D);
+    N = ceil (outsize / D);
 
       
     % with no edge overlaps
-    temp = []; 
+    result = []; 
     for j =  1 : N % each row
         trow = [];
         for i =1 : N
@@ -18,7 +18,7 @@ function  output = quilt_random(sample,outsize,patchsize)
        
                 trow = cat(2,trow,patch);
         end
-        temp = cat(1,temp,trow);
+        result = cat(1,result,trow);
     end
-    output = temp;
+    output = result(1:outsize,1:outsize,:);
 end
