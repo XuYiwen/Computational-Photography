@@ -4,8 +4,7 @@ function output = texture_transfer(sample,target, patchsize,overlap,tol,alpha)
     D = (2*r +1);
     Ni = floor((size(target,2)-overlap)/(D-overlap));
     Nj = floor((size(target,1)-overlap)/(D-overlap));
-    
-    % Guassian filtering on correspond map - expired
+    % Guassian filtering on correspond map
     Guassian = false;
     if Guassian
         fil = fspecial('gaussian',7*r , r);
@@ -13,8 +12,7 @@ function output = texture_transfer(sample,target, patchsize,overlap,tol,alpha)
     else
         co_sample = sample;
     end
-%     figure(1), imshow(target);
-%     figure(2), imshow(sample);
+
     
     result = zeros(Nj*(D-overlap)+overlap,Ni*(D-overlap)+overlap,3);  % need to change
     for j = 1 : Nj
@@ -58,6 +56,8 @@ function output = texture_transfer(sample,target, patchsize,overlap,tol,alpha)
             % Combine the mixture
             mix = mix_cut(ovlp,addin,cut_mask);
             result((wy+1):(wy+D),(wx+1):(wx+D),:) = mix;
+%             figure(8),imshow(result);
+          
         end
     end    
     output = result;

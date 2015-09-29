@@ -47,7 +47,7 @@ end
 clear;clc;close all;
 % Loading image
 num = 1;
-size = [21];
+size = [27];
 sample_img = im2double(imread(['.\images\sam_',num2str(num),'.jpg']));
 target_img = im2double(imread(['.\images\tar_',num2str(num),'.jpg']));
 
@@ -59,10 +59,10 @@ alpha = 0.3;
 
 % Texture transfering
 tex_trans = texture_transfer(sample_img,target_img, patchsize,overlap,tol,alpha);
+figure(5),imshow(tex_trans),title('The texture transfer result');
+imwrite(out_seam,['.\results\tx_transf_',num2str(num),'.jpg']);
 
 % Display settings
-figure(5),
-subplot(121),imshow(sample_img),title('The original texture image');
-subplot(122),imshow(target_img),title('The original target image');
-figure(6),imshow(tex_trans),title('The texture transfer result');
-imwrite(tex_trans,['.\results\tx_transf_',num2str(num),'.jpg']);
+
+
+
