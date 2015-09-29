@@ -44,3 +44,20 @@ if (seam_finding)
         imwrite(out_seam,['.\results\seam_fd_',num2str(num),'.jpg']);
 end
 %% texture transfer
+% Loading image
+num = 1;
+size = [31];
+sample_img = im2double(imread(['.\images\sam_',num2str(num),'.jpg']));
+target_img = im2double(imread(['.\images\tar_',num2str(num),'.jpg']));
+
+% Setting parameters
+patchsize = size(num);
+overlap = floor(patchsize / 5);
+tol = 0.1;
+
+% Texture transfering
+tex_trans = texture_transfer(sample_img,target_image, patchsize,overlap,tol);
+
+% Display settings
+
+
