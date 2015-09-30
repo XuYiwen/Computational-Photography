@@ -54,8 +54,8 @@ function output = iter_tex_transfer(sample,target, patchsize,overlap,tol,iter_nu
         r = max(3,r);
         overlap = floor(overlap*2/3);
         overlap = max(1,overlap);
-        figure(layer),imshow(result),title(['Iteration (',num2str(layer),')']);
-        print(layer,'-djpeg',['.\results\',num2str(layer),'_ittx_transf.jpg']);
+%         figure(layer),imshow(result),title(['Iteration (',num2str(layer),')']);
+%         print(layer,'-djpeg',['.\results\',num2str(layer),'_ittx_transf.jpg']);
         last = result;
     end
     output =result;

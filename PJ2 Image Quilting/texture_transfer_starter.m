@@ -10,7 +10,7 @@ tar = im2double(imread(['.\images\tar_',num2str(num),'.jpg']));
 patchsize = size(num);
 overlap = floor(patchsize / 5);
 tol = 0.1;
-alpha = 0.3;
+alpha = 0.7;
 iter = true;
 iter_num = 3;
 
