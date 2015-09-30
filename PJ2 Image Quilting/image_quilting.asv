@@ -1,68 +1,72 @@
-clc; clear; close all;
-
 %% image quilting
+clc; clear; close all;
 % load image
-num = 4;
-size = [51,41,41,15];
+num = 11;
+size = [45,45,41,15,21,  51,37,25,25,21,  41];
 img = im2double(imread(['.\images\tx_',num2str(num),'.jpg']));
-figure(1),imshow(img),title('The original image');
-imwrite(img,['.\results\org_img_',num2str(num),'.jpg']);
 
 % parameter settings
 sample = img;
-outsize = 400;
+outsize = 300;
 patchsize = size(num);
+overlap = floor(patchsize / 3);
+tol = 0.1;
 
-% image quilting method selection
-rand_sample = false;
-overlap_patches = false;
-seam_finding = false;
+% Random sample image
+[out_rand,first] = quilt_random(sample, outsize, patchsize);
 
-if (rand_sample) 
-    % Random sample image
-    out_rand = quilt_random(sample, outsize, patchsize);
-    figure(2),imshow(out_rand),title('The random sampled image');
-    imwrite(out_rand,['.\results\rdm_sp_',num2str(num),'.jpg']);
-end
+% Overlapping patches
+[out_over,first] = quilt_simple(sample,outsize,patchsize,overlap,tol,first);
 
-if (overlap_patches)
-    % Overlapping patches
-    overlap = floor(patchsize / 5);
-    tol = 0.1;
-    out_over = quilt_simple(sample,outsize,patchsize,overlap,tol);
-    
-    figure(3),imshow(out_over),title('The overlapped image');
-    imwrite(out_over,['.\results\ovlp_pch_',num2str(num),'.jpg']);
-end
+% Seam finding cut
+[out_seam,first] = quilt_seam(sample,outsize,patchsize,overlap,tol,first);
 
-if (seam_finding)
-        overlap = floor(patchsize / 5);
-        tol = 0.1;
-        out_seam = quilt_seam(sample,outsize,patchsize,overlap,tol);
-        
-        figure(4),imshow(out_seam),title('The seam finding image');
-        imwrite(out_seam,['.\results\seam_fd_',num2str(num),'.jpg']);
-end
+% Plot Print
+figure(1),set(1,'position',[1200 1200 200 200]);
+imshow(img),title('The original image');
+
+figure(2),set(2,'position',[50 50 1500 500]);
+subplot(131),imshow(out_rand),title('(a) The Random Sampled Image');
+subplot(132),imshow(out_over),title('(b) The Overlapped Image');
+subplot(133),imshow(out_seam),title('(c) The Seam Finding Image');
+
+print(1,'-djpeg',['.\results\',num2str(num),'_org_tex.jpg']);
+print(2,'-djpeg',['.\results\',num2str(num),'_compare.jpg']);
+
 %% texture transfer
-clear;clc;close all;
+clear; clc; close all;
 % Loading image
-num = 1;
-size = [27];
-sample_img = im2double(imread(['.\images\sam_',num2str(num),'.jpg']));
-target_img = im2double(imread(['.\images\tar_',num2str(num),'.jpg']));
+num = 4;
+size = [31,11,11,11];
+sam = im2double(imread(['.\images\sam_',num2str(num),'.jpg']));
+tar = im2double(imread(['.\images\tar_',num2str(num),'.jpg']));
 
 % Setting parameters
 patchsize = size(num);
 overlap = floor(patchsize / 5);
 tol = 0.1;
 alpha = 0.3;
+iter = false;
+iter_num = 5;
 
 % Texture transfering
-tex_trans = texture_transfer(sample_img,target_img, patchsize,overlap,tol,alpha);
-figure(5),imshow(tex_trans),title('The texture transfer result');
-imwrite(out_seam,['.\results\tx_transf_',num2str(num),'.jpg']);
-
-% Display settings
-
-
-
+if iter
+    tex_trans = iter_tex_transfer(sam,tar, patchsize,overlap,tol,alpha,iter_num);
+    % Display settings
+    figure(5),
+    subplot(121),imshow(sam),title('The original texture image');
+    subplot(122),imshow(tar),title('The original target image');
+    print(5,'-djpeg',['.\results\',num2str(num),'_itorg_img.jpg']);
+    figure(6),set(6,'position',[50 50 1500 400]);
+imshow(tex_trans),title('The itertatexture transfer result');
+    print(6,'-djpeg',['.\results\',num2str(num),'_ittx_transf.jpg']);
+else
+    tex_trans = texture_transfer(sam,tar, patchsize,overlap,tol,alpha);
+    % Display settings
+    figure(5),
+    subplot(121),imshow(sam),title('The original texture image');
+    subplot(122),imshow(tar),title('The original target image');
+    print(5,'-djpeg',['.\results\',num2str(num),'_org_img.jpg']);
+    figure(6),imshow(tex_trans),title('The texture transfer result');
+    print(6,'-djpeg',['.\results\',num2str(num),'_tx_transf.jpg']);
+end

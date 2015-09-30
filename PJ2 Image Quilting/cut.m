@@ -1,4 +1,4 @@
-function mask = cut(errpatch)
+function [mask, bestpath] = cut(errpatch)
 % Computes the minimum cut path from the left to right side of the patch
 % 
 % Input:

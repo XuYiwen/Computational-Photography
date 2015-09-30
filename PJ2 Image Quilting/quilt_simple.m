@@ -1,8 +1,9 @@
-function  output = quilt_simple(sample,outsize,patchsize,overlap,tol)
+function  [output,first] = quilt_simple(sample,outsize,patchsize,overlap,tol,startat)
     % control the random sampling range
     r = floor (patchsize/2); 
     D = (2*r +1);
     N = ceil (outsize/ (D-overlap));
+    first = [];
 
     result = zeros(N*(D-overlap)+overlap,N*(D-overlap)+overlap,3);
     for j = 1 : N
@@ -23,8 +24,12 @@ function  output = quilt_simple(sample,outsize,patchsize,overlap,tol)
             rand_no = randi(size(y,1));
             ry = y(rand_no)+r;
             rx = x(rand_no)+r;
-
-            patch = sample((ry-r):(ry+r), (rx-r):(rx+r),:);
+            if isempty(first)
+                patch = startat;
+                first = startat;
+            else
+                patch = sample((ry-r):(ry+r), (rx-r):(rx+r),:);
+            end
             result((wy+1):(wy+D),(wx+1):(wx+D),:) = patch;
             
             % test display  
