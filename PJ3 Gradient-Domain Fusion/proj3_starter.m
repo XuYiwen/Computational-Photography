@@ -1,3 +1,4 @@
+clear; clc; close all;
 % starter script for project 3
 DO_TOY = true;
 DO_BLEND = false;
@@ -8,6 +9,9 @@ if DO_TOY
     toyim = im2double(imread('./samples/toy_problem.png')); 
     % im_out should be approximately the same as toyim
     im_out = toy_reconstruct(toyim);
+    figure(1), 
+    subplot(121),imshow(toyim), title('The original toy image');
+    subplot(122),imshow(im_out), title('The output of the toy reconstruction');
     disp(['Error: ' num2str(sqrt(sum((toyim(:)-im_out(:)).^2)))])
 end
 
