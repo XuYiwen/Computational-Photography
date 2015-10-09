@@ -1,0 +1,5 @@
+function output = toy_reconstruct(im)
+[imh, imw, nb] = size(im); 
+im2var = zeros(imh, imw); 
+im2var(1:imh*imw) = 1:imh*imw; 
+
