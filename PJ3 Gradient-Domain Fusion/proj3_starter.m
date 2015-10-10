@@ -1,7 +1,7 @@
 clear; clc; close all;
 % starter script for project 3
-DO_TOY = true;
-DO_BLEND = false;
+DO_TOY = false;
+DO_BLEND = true;
 DO_MIXED  = false;
 DO_COLOR2GRAY = false;
 
@@ -10,8 +10,8 @@ if DO_TOY
     % im_out should be approximately the same as toyim
     im_out = toy_reconstruct(toyim);
     figure(1), 
-    subplot(121),imshow(toyim), title('The original toy image');
-    subplot(122),imshow(im_out), title('The output of the toy reconstruction');
+    subplot(121),imshow(toyim), title('Original toy image');
+    subplot(122),imshow(im_out), title('Output of the toy reconstruction');
     disp(['Error: ' num2str(sqrt(sum((toyim(:)-im_out(:)).^2)))])
 end
 
