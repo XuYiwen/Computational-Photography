@@ -1,4 +1,4 @@
-function output = poissonBlend(source,mask,target)
+function output = mixedBlend(source, mask, target)
 % construct the mask
 output = zeros(size(target));
 [ry,rx] = find(mask);
@@ -7,7 +7,6 @@ vmask = zeros(size(mask,1),size(mask,2));
 for i = 1:len
      vmask(ry(i),rx(i)) = i;
 end
-figure(1),imagesc(vmask),axis image;
 
 for ch = 1:3
     % prepare the single channel and initialize
@@ -15,50 +14,54 @@ for ch = 1:3
     fore = source(:,:,ch);
     e = 1;
     A = sparse([],[],[],len*4+1,len);
-    b = sparse([],[]len*4+1,len);
+    b = sparse([],[],[],len*4+1,len);
     
     % pixels in region
     for i = 1:len
         x = rx(i);
         y = ry(i);
         %up
+        dij = mixedValue(fore(y,x) - fore(y-1,x), back(y,x) - back(y-1,x));
         if vmask(y-1,x) == 0
             A(e, vmask(y,x)) =1;
-            b(e) = fore(y,x) - fore(y-1,x) + back(y-1,x) ;
+            b(e) =dij + back(y-1,x) ;
         else
             A(e, vmask(y,x)) =1;
             A(e, vmask(y-1,x)) = -1;
-            b(e) = fore(y,x) - fore(y-1,x);
+            b(e) = dij;
         end
         e = e+1;
         % down
+        dij = mixedValue(fore(y,x) - fore(y+1,x), back(y,x) - back(y+1,x));
         if vmask(y+1,x) == 0
             A(e, vmask(y,x)) =1;
-            b(e) = fore(y,x) - fore(y+1,x) + back(y+1,x) ;
+            b(e) = dij + back(y+1,x) ;
         else
             A(e, vmask(y,x)) =1;
             A(e, vmask(y+1,x)) = -1;
-            b(e) = fore(y,x) - fore(y+1,x);
+            b(e) = dij;
         end
         e = e+1;
         % left
+        dij = mixedValue(fore(y,x) - fore(y,x-1), back(y,x) - back(y,x-1));
         if vmask(y,x-1) == 0
             A(e, vmask(y,x)) =1;
-            b(e) = fore(y,x) - fore(y,x-1) + back(y,x-1) ;
+            b(e) = dij + back(y,x-1) ;
         else
             A(e, vmask(y,x)) =1;
             A(e, vmask(y,x-1)) = -1;
-            b(e) = fore(y,x) - fore(y,x-1);
+            b(e) = dij;
         end
         e = e+1;
         % right
+        dij = mixedValue(fore(y,x) - fore(y,x+1), back(y,x) - back(y,x+1));
         if vmask(y,x+1) == 0
             A(e, vmask(y,x)) =1;
-            b(e) = fore(y,x) - fore(y,x+1) + back(y,x+1) ;
+            b(e) = dij + back(y,x+1) ;
         else
             A(e, vmask(y,x)) =1;
             A(e, vmask(y,x+1)) = -1;
-            b(e) = fore(y,x) - fore(y,x+1);
+            b(e) =dij;
         end
         e = e+1;
     end
