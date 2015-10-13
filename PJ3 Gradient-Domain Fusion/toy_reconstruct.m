@@ -4,8 +4,8 @@ im2var = zeros(imh, imw);
 im2var(1:imh*imw) = 1:imh*imw; 
 
 e = 1; 
-A = zeros(imh*imw*2+1, imh*imw);
-b = zeros(imh*imw*2+1, 1);
+A = zeros(imh*imw*2+2, imh*imw);
+b = zeros(imh*imw*2+2, 1);
 for y = 1:imh-1
     for x = 1:imw-1
         % Objective 1
@@ -23,9 +23,11 @@ end
 % Objective 3
 A(e, im2var(1,1)) = 1;
 b(e) = im(1,1);
+
 % Compute the pixel
 A = sparse(A);
 v = A\b;
+% v(end) = im(imh,imw);
 output = reshape(v,[imh, imw]);
 
 

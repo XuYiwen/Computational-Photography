@@ -4,7 +4,7 @@ function [mask, poly] = getMask(im)
 % polygon and a chain of all interior boundary points.
 
 disp('Draw polygon around source object in clockwise order, q to stop')
-figure(1), hold off, imagesc(im), axis image;
+figure(1), hold off, imshow(im), axis image;
 sx = [];
 sy = [];
 while 1
