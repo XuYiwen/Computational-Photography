@@ -7,6 +7,7 @@ tR = back;
 tM = double(objmask);
 for i = 1 : N
     % construct and pad to left mask
+<<<<<<< HEAD
 %     f = fspecial('gaussian',width*7,width);
     f = fspecial('disk',width);
     mask = imfilter(tM,f,'replicate');
@@ -20,6 +21,11 @@ for i = 1 : N
 %     wr = imw - wl - width;
 %     mask = [zeros(imh,wl), cen_mask, ones(imh,wr)];
 %     figure(1),imshow(mask);
+=======
+    f = fspecial('disk',width);
+    mask = imfilter(tM,f,'replicate');
+%     figure(5),imagesc(mask);
+>>>>>>> d8d085fb5048bb2109ead1c276253f0581a4bc70
 
     % Subsample down
     gauL = []; gauR = [];
@@ -44,7 +50,10 @@ for i = 1 : N
     
     Lap{i} = bLap;
     Gau{i} = bGau;
+<<<<<<< HEAD
 %     Gau{i} = bGau;
+=======
+>>>>>>> d8d085fb5048bb2109ead1c276253f0581a4bc70
     pysize{i} = [size(tL,1),size(tL,2)];
     tL = imresize(tL,0.5);
     tR = imresize(tR,0.5);
