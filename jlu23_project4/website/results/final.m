@@ -1,0 +1,14 @@
+Render=imread('image2_1.png');
+Exist=imread('image2_2.png');
+Mask=imread('image2_3.png');
+Background=imread('2.1.png');
+[imx imy imz]=size(Render);
+Background=imresize(Background,[imx imy]);
+M=single(Mask)/255;
+R=single(Render)/255;
+E=single(Exist)/255;
+I=single(Background)/255;
+c=1;
+composite=M.*R + (1-M).*I + (1-M).*(R-E).*c;
+imshow(composite);
+imwrite(composite,'image2_4.png');

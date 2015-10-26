@@ -1,0 +1,30 @@
+<html>
+<link rel="stylesheet" type="text/css" href="style.css">
+<body>
+
+<p><font size="6"><b>1. Recovering HDR Radiance Maps</b></font></p>
+<p><font size="4"><b>In this section, we recover HDR radiance maps from three images with different exposure. The images are taken with ISO400, f3.5 and shutter time 1/125, 1/30, 1/8 respectively from lowest exposure to highest exposure.</b></font></p>
+<img src=".\results\2_2.jpg" alt="" width="500">
+<p><font size="4">Over Exposure</font></p>
+<img src=".\results\2_4.jpg" alt="" width="500">
+<p><font size="4">Normal Exposure</font></p>
+<img src=".\results\2_3.jpg" alt="" width="500">
+<p><font size="4">Under Exposure</font></p>
+<p><font size="4"><b>The following is cropped sphere</b></font></p>
+<img src=".\results\sphere_high.png" alt="" width="500">
+<p><font size="4">Over Exposure</font></p>
+<img src=".\results\sphere_normal.png" alt="" width="500">
+<p><font size="4">Normal Exposure</font></p>
+<img src=".\results\sphere_low.png" alt="" width="500">
+<p><font size="4">Under Exposure</font></p>
+<p><font size="4"><b>The following is results from several methods.</b></font></p>
+<p><font size="4"><b>Method 1: Naive LDR Merging</b></font></p>
+<img src=".\results\hdr_naive.png" alt="" width="500">
+<p><font size="4"><b>Method 2: LDR merging without under- and over-exposed regions</b></font></p>
+<img src=".\results\hdr_under_over.png" alt="" width="500">
+<p><font size="4"><b>Method 3: LDR merging and response function estimation</b></font></p>
+<img src=".\results\hdr_response_function.png" alt="" width="500">
+<p><font size="4"><b>Estimated Function g</b></font></p>
+<img src=".\results\trend.png" alt="" width="500">
+</body>
+</html>

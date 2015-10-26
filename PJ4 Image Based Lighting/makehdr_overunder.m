@@ -4,32 +4,61 @@ function hdr = makehdr_overunder(ldrs, exposures,cut_expo)
     [exposures,sortexp] = sort(reshape(exposures,1,1,1,[]));
     ldrs = ldrs(:,:,:,sortexp); %Sort exposures from dark to light
 
-    %Create naive HDR here
+    %Create weighted HDR here
     len = length(sortexp);
-    sum = zeros(size(ldrs(:,:,:,1)));
-    sum_mask = zeros(size(ldrs(:,:,:,1)));
+    sum = zeros(size(ldrs(:,:,:,1))); 
+    wt = zeros(size(ldrs(:,:,:,1))); 
+    uni_inten = zeros(size(ldrs));
+    logirr = zeros(size(ldrs));
+    pre_over = ones(size(ldrs,1),size(ldrs,2));
+    pre_under = ones(size(ldrs,1),size(ldrs,2));
     for i = 1:len
-        toadd = ldrs(:,:,:,i);
-        % find the properly exposed pixels
-        gray = rgb2gray(toadd);
-        notOverExpo = gray<(1-cut_expo);
-        notUnderExpo = gray> cut_expo;
-        mask = notOverExpo & notUnderExpo;
-        mask = double(repmat(mask,[1,1,3]));
-        % adding up to average
-        inRange = (toadd.*mask)./exposures(i);
-        sum = sum + log(inRange);
-%         sum = sum+(log(ldrs(:,:,:,i)./exposures(i)).*mask);
-        minofsum = min(sum(:))
-        h = (ldrs(:,:,:,i)./exposures(i));
-        minoflog = min(h(:))
-        imshow(toadd);
-        pause;
-        sum_mask = sum_mask + mask;
+        % generate proper exposed mask
+        gray = rgb2gray(ldrs(:,:,:,i));
+        over = gray>(1-cut_expo);
+        under = gray<cut_expo;
+        pre_over = pre_over & over;
+        pre_under = pre_under & under;
+        mask = double(~(over | under));
+        mask = repmat(mask,[1,1,3]);
+        
+        % mapping into the same intensity
+        uni_inten(:,:,:,i) = ldrs(:,:,:,i)/exposures(i);        
+        logirr(:,:,:,i) =log(uni_inten(:,:,:,i)+0.001);
+        sum = sum+logirr(:,:,:,i).*mask;
+        wt = wt +mask;
     end
-    hdr =sum ./ sum_mask;
+    % elimated never properly exposed
+    extreme = 0;
+    for i =1:len
+        extreme = 1./exposures(i) +extreme;
+    end
+    extreme = log(extreme+0.001);
+% 
+%     figure();
+%     subplot(1,3,1),imshow(wt);
+%     subplot(1,3,2),imshow(pre_over);
+%     subplot(1,3,3),imshow(pre_under);
+    
+    pre_over = repmat(pre_over,[1,1,3]);
+    pre_under = repmat(pre_under,[1,1,3]);
+    sum = sum+double(pre_over)*extreme+0;
+    wt = wt+1*double(pre_over)+1*double(pre_under);
 
-    sum_mask = logical(sum_mask);
-    hdr = exp(hdr).*sum_mask;
-%     hdr = hdr.* logical(sum_mask);
+    hdr =sum ./ wt;
+    hdr = exp(hdr);
+    minlog = min(logirr(:));
+    maxlog= max(logirr(:));
+    
+    % display 
+    for i = 1: len
+          % show estimated log irradiance
+          figure(2),hold on;
+          subplot(2,len,i),imshow(ldrs(:,:,:,i)),title(['1/',num2str(1/exposures(i))]);
+          subplot(2,len,len+i),imshow((logirr(:,:,:,i)-minlog)./(maxlog-minlog) ),title(['1/',num2str(1/exposures(i))]);
+    end
+    % show hdr
+    figure(3);
+    loghdr = tonemap(hdr);
+    imshow(loghdr), title('Weighted HDR Output');
 end
