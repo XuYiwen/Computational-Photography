@@ -1,6 +1,5 @@
-function panorama_stitching(check_pano)
-    master_frames=[90   270   450   630   810];
-    reference_frame=450;
+function panorama_stitching(check_pano,master_frames,reference_frame,Xdata,Ydata)
+  
     R=im2single(imread(sprintf('frames/f%04d.jpg',reference_frame)));
         Ho = auto_homography(R,R);
 
@@ -38,7 +37,7 @@ function panorama_stitching(check_pano)
         H_stack_master(:,:,i) = H; 
         im=im2single(imread(sprintf('frames/f%04d.jpg',master_frames(i))));
         T = maketform('projective', H'); 
-        toadd = imtransform(im, T, 'XData',[-651 980],'YData',[-51 460]);
+        toadd = imtransform(im, T, 'XData',Xdata,'YData',Ydata);
         img{i} = toadd; 
     end
     save('pano_movie/master_homo.mat','master_frames','H_stack_master');

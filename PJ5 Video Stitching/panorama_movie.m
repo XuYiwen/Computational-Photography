@@ -1,10 +1,6 @@
-function panorama_movie(recompute,sample_rate)
-    % Input frames and settings
-    start_frame = 1;
-    end_frame = 900;
+function panorama_movie(recompute,sample_rate,reference_frame,start_frame,end_frame,Xdata,Ydata)
     
     % get the frame list with subsampling
-    reference_frame = 450;
     frame_list = [start_frame: sample_rate: end_frame];
         num_ref = find(frame_list == reference_frame);
         if isempty(num_ref)
@@ -35,7 +31,7 @@ function panorama_movie(recompute,sample_rate)
            % Panorama image projection
             im=im2single(imread(sprintf('frames/f%04d.jpg',frame_list(i))));
             T = maketform('projective', H'); 
-            toadd = imtransform(im, T, 'XData',[-651 980],'YData',[-51 460]);
+            toadd = imtransform(im, T, 'XData',Xdata,'YData',Ydata);
             imwrite(toadd,sprintf('pano_movie/pano_frames/f%04d.jpg',frame_list(i)));
             
             % Status update

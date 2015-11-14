@@ -29,7 +29,7 @@ function H = auto_homography(img_r,img_s)
         pos_R_ = Htemp * pos_S ; % project points from first image to second using H
         du = pos_R_(1,:)./pos_R_(3,:) - pos_R(1,:)./pos_R(3,:) ;
         dv = pos_R_(2,:)./pos_R_(3,:) - pos_R(2,:)./pos_R(3,:) ;
-        ok_t = sqrt(du.*du + dv.*dv) < 1;  % you may need to play with this threshold
+        ok_t = sqrt(du.*du + dv.*dv) < 1.5;  % you may need to play with this threshold
         score_t = sum(ok_t) ;
 
         if score_t > best_score

@@ -2,7 +2,7 @@ close all;
 clc;
 clear;
 
-reader = VideoReader('beijing.mp4');
+reader = VideoReader('green.mp4');
 
 % Read in all video frames.
 vidFrames = read(reader);
@@ -11,7 +11,8 @@ vidFrames = read(reader);
 numFrames = get(reader, 'NumberOfFrames');
 
 % Create a MATLAB movie struct from the video frames.
-for k = 1 : numFrames
+for k = 1 : round(numFrames)
      toadd= vidFrames(:,:,:,k);
-     mov(k).colormap = [];
+%      toadd = imresize(toadd,0.5,'bilinear' );
+     imwrite(toadd,sprintf('frames/f%04d.jpg',k));
 end

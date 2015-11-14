@@ -1,6 +1,5 @@
-function background_movie(sample_rate)
+function background_movie(sample_rate,reference_frame,Xd,Yd)
     % Load previous parameters
-    reference_frame = 450;
     im = im2single(imread(sprintf('frames/f%04d.jpg',reference_frame)));
     [rec_h,rec_w,~] = size(im);
     load(sprintf('pano_movie/pano_homography_%04d.mat',sample_rate),'H_stack','H_inv_stack','frame_list');
@@ -18,7 +17,7 @@ function background_movie(sample_rate)
         H= H_stack(:,:,i);
         T = maketform('projective', H'); 
         T_inv = fliptform(T);
-        toadd = imtransform(rev_frame, T_inv, 'XData',[1 rec_w],'YData',[1 rec_h], 'UData', [-651 980], 'VData', [-51 460]);
+        toadd = imtransform(rev_frame, T_inv, 'XData',[1 rec_w],'YData',[1 rec_h], 'UData', Xd, 'VData', Yd);
         imwrite(toadd,sprintf('pano_movie/back_frames/f%04d.jpg',frame_list(i)));
     end
     

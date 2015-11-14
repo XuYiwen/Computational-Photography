@@ -1,6 +1,5 @@
-function output = background_panorama(display,sample_rate)
+function output = background_panorama(display,sample_rate,reference_frame)
     % Input frames and settings
-    reference_frame = 450;
     load(sprintf('pano_movie/pano_homography_%04d.mat',sample_rate),'frame_list');
 
     ref = im2single(imread(sprintf('pano_movie/pano_frames/f%04d.jpg',reference_frame)));
